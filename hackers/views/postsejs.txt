@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Gönderiler</title>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Tüm Gönderiler</h2>
+      <ul class="list-group">
+        <% posts.forEach(post => { %>
+          <li class="list-group-item">
+            <div class="d-flex justify-content-between">
+              <div>
+                <strong><%= post.author.name %></strong>: <%= post.content %>
+                <br>
+                <span class="likes">Beğeniler: <%= post.likes %></span>
+                <button class="btn btn-primary btn-sm like-button" data-post-id="<%= post._id %>">Beğen</button>
+                <button class="btn btn-secondary btn-sm unlike-button" data-post-id="<%= post._id %>">Beğenmeyi Kaldır</button>
+              </div>
+              <div>
+                <span class="text-muted"><%= post.createdAt.toLocaleDateString() %></span>
+              </div>
+            </div>
+
+            <form action="/post/<%= post._id %>/comment" method="POST" class="mt-2">
+              <div class="input-group">
+                <input type="text" name="content" placeholder="Yorum ekle..." class="form-control">
+                <div class="input-group-append">
+                  <button type="submit" class="btn btn-outline-secondary">Gönder</button>
+                </div>
+              </div>
+            </form>
+
+            <ul class="comments list-group mt-2">
+              <% post.comments.forEach(comment => { %>
+                <li class="list-group-item">
+                  <strong><%= comment.author.name %></strong>: <%= comment.content %>
+                  <span class="text-muted"><%= comment.createdAt.toLocaleDateString() %></span>
+                </li>
+              <% }); %>
+            </ul>
+          </li>
+        <% }); %>
+      </ul>
+    </div>
+    
+  </body>
+</html>

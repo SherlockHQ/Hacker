@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Profil</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card">
+            <img src="<%= user.profilePicture %>" alt="Profil Resmi" class="card-img-top">
+            <div class="card-body">
+              <h5 class="card-title"><%= user.name %></h5>
+              <p class="card-text"><%= user.bio %></p>
+              <button class="btn btn-primary follow-button" data-user-id="<%= user._id %>">Takip Et</button>
+              <button class="btn btn-secondary unfollow-button" data-user-id="<%= user._id %>">Takipten Çıkar</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <h2>Gönderiler</h2>
+          <ul class="list-group">
+            <% user.posts.forEach(post => { %>
+              <li class="list-group-item">
+                <%= post.content %>
+                <br>
+                <span class="likes">Beğeniler: <%= post.likes %></span>
+                <button class="btn btn-primary btn-sm like-button" data-post-id="<%= post._id %>">Beğen</button>
+                <button class="btn btn-secondary btn-sm unlike-button" data-post-id="<%= post._id %>">Beğenmeyi Kaldır</button>
+                <br>
+                <form action="/post/<%= post._id %>/comment" method="POST" class="mt-2">
+                  <div class="input-group">
+                    <input type="text" name="content" placeholder="Yorum ekle..." class="form-control">
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-outline-secondary">Gönder</button>
+                    </div>
+                  </div>
+                </form>
+
+                <ul class="comments list-group mt-2">
+                  <% post.comments.forEach(comment => { %>
+                    <li class="list-group-item">
+                      <strong><%= comment.author.name %></strong>: <%= comment.content %>
+                      <span class="text-muted"><%= comment.createdAt.toLocaleDateString() %></span>
+                    </li>
+                  <% }); %>
+                </ul>
+              </li>
+            <% }); %>
+          </ul>
+        </div>
+      </div>
+
+      <h2>Takip Edilenler</h2>
+      <ul class="list-group">
+        <% user.following.forEach(followingUser => { %>
+          <li class="list-group-item">
+            <a href="/profile/<%= followingUser.username %>"><%= followingUser.name %></a>
+          </li>
+        <% }); %>
+      </ul>
+
+      <h2>Takipçiler</h2>
+      <ul class="list-group">
+        <% user.followers.forEach(follower => { %>
+          <li class="list-group-item">
+            <a href="/profile/<%= follower.username %>"><%= follower.name %></a>
+          </li>
+        <% }); %>
+      </ul>
+
+    </div>
+    
+  </body>
+</html>
